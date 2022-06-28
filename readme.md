@@ -81,3 +81,7 @@ If we go to the argoCD UI we will see:
 
 And you can see the pods are created
 ![Alt text](./images/demo.png?raw=true)
+
+## 4. Test automatic sync
+
+update the image version for example in the deployment file to 1.1 or 1.2. Commit and push your updates and after a certain period of time you will see the update.
