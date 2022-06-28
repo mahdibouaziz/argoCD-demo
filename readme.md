@@ -1,3 +1,31 @@
+# What Is Argo CD?
+
+Argo CD is a declarative, `GitOps` continuous delivery tool for Kubernetes.
+
+## What is GitOps?
+
+GitOps is an **operational** framework that takes DevOps best practices used for application development such as version control, collaboration, compliance, and CI/CD tooling, and applies them to infrastructure automation.
+
+GitOps is used to automate the process of provisioning infrastructure. Similar to how teams use application source code, operations teams that adopt GitOps use configuration files stored as code (**infrastructure as code**). GitOps configuration files generate the same infrastructure environment every time it’s deployed, just as application source code generates the same application binaries every time it’s built.
+
+# How it works
+
+Argo CD follows the **GitOps** pattern of using Git repositories as the source of truth for defining the desired application state. Kubernetes manifests can be specified in several ways:
+
+- **kustomize** applications
+- **helm** charts
+- **jsonnet** files
+- Plain directory of YAML/json manifests
+- Any custom config management tool configured as a config management plugin
+
+Argo CD automates the deployment of the desired application states in the specified target environments. Application deployments can track updates to branches, tags, or pinned to a specific version of manifests at a Git commit.
+
+# Architecture
+
+Argo CD is implemented as a kubernetes controller which continuously monitors running applications and compares the current, live state against the desired target state (as specified in the Git repo). A deployed application whose live state deviates from the target state is considered OutOfSync. Argo CD reports & visualizes the differences, while providing facilities to automatically or manually sync the live state back to the desired target state. Any modifications made to the desired target state in the Git repo can be automatically applied and reflected in the specified target environments.
+
+![Alt text](./images/argocd_architecture.png?raw=true)
+
 # Demo Setup:
 
 in this demo we are going to install ArgoCD in a K8s cluster, configure it with `Application` CRD and then test our setup by updating the Deployment file
