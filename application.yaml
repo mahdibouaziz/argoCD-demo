@@ -8,7 +8,7 @@ spec:
 
   # Git Repository
   source:
-    repoURL: git@github.com:mahdibouaziz/argoCD-demo.git
+    repoURL: https://github.com/mahdibouaziz/argoCD-demo.git
     targetRevision: HEAD
     path: dev
 

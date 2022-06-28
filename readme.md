@@ -17,9 +17,9 @@ This will create a lot of Pods and Services
 
 `kubectl apply -n argocd -f https://raw.githubusercontent.com/argoproj/argo-cd/stable/manifests/install.yaml`
 
-### Must open a discussion here !!!
+### Acess argoCD UI
 
-To access The ArgoCD UI, you need to ?:
+To access The ArgoCD UI, you need to:
 
 `kubectl patch svc argocd-server -n argocd -p '{"spec": {"type": "NodePort"}}'`
 
@@ -35,4 +35,49 @@ The initial password for the admin account is auto-generated and stored as clear
 
 ## 2. Configure ArgoCD with `Application` CRD
 
+Let's write a configuration file for argoCD to connect it to the git repository where the config files are hosted
+
+```yaml
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: myapp-argo-application
+  namespace: argocd
+spec:
+  #Every application belongs to a signle project and you can group multiple application into a project
+  project: default
+
+  # Git Repository that argocd will connect to and sync it
+  source:
+    repoURL: https://github.com/mahdibouaziz/argoCD-demo.git
+    targetRevision: HEAD
+    path: dev # The folder in the repository
+
+  # K8s Cluster where argocd will apply the manifest files in the git repository
+  destination:
+    server: https://kubernetes.default.svc # the default service name of K8s
+    namespace: myapp
+
+  syncPolicy:
+    syncOptions:
+      - CreateNamespace=true #to tell K8s to automatically create a namespace if it doesn't exists
+
+    automated: #enable automated sync (self healing & pruning)
+      selfHeal: true
+      prune: true
+```
+
 ## 3. Test our setup by updating Deployment.yaml file
+
+we need now to apply this configuration to configure argoCD with this logic
+
+`kubectl apply -f application.yaml`
+
+this is gonna be the only kubectl apply that we need to do in this project, because after that everything shoud be auto synchronized
+
+If we go to the argoCD UI we will see:
+![Alt text](./images/argocd-ui.png?raw=true)
+![Alt text](./images/argocd-ui2.png?raw=true)
+
+And you can see the pods are created
+![Alt text](./images/demo.png?raw=true)
